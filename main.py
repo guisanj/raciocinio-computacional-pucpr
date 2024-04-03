@@ -24,9 +24,16 @@ while True:
             opcao2 = input("Escolha a ação desejada: ")
             print(f"Você escolheu a opção: {opcao2}")
             if opcao2 == "1":
+                codigo_estudante = int(input("Digite o código dx estudante: "))
                 nome_estudante = input("Digite o nome dx estudante: ")
-                estudantes.append([nome_estudante])
-                print(f"Estudante {nome_estudante} adicionado com sucesso!")
+                cpf_estudante = input("Digite o CPF dx estudante: ")
+                dados_estudante = {
+                    "codigo": codigo_estudante,
+                    "nome": nome_estudante,
+                    "cpf": cpf_estudante
+                }
+                estudantes.append(dados_estudante)
+                print(f"Estudante {nome_estudante} adicionadx com sucesso!")
                 break
             elif opcao2 == "2":
                 if len(estudantes) == 0:
@@ -36,8 +43,27 @@ while True:
                     print("***ESTUDANTES***")
                     for i, estudante in enumerate(estudantes, start = 1):
                         print(i, estudante)
-            elif opcao2 =="3" or opcao2 == "4":
-                print("FUNCIONALIDADE EM DESENVOLVIMENTO")
+            elif opcao2 =="3":
+                codigo_atualizacao = int(input("Digite o código dx estudante que deseja atualizar: "))
+                for cadastro_estudante in estudantes:
+                    if cadastro_estudante["codigo"] == codigo_atualizacao:
+                        cadastro_estudante["codigo"] = int(input("Digite o novo código dx estudante: "))
+                        cadastro_estudante["nome"] = input("Digite o nome corrigido dx estudante: ")
+                        cadastro_estudante["cpf"] = input("Digite CPF correto dx estudante: ")
+                        codigo_atualizacao = cadastro_estudante["codigo"]
+                        print(f"Cadastro atualizado com sucesso: {cadastro_estudante}")
+                        break
+                    else:
+                        print("Estudante não localizadx.")
+                        break
+            elif opcao2 == "4":
+                codigo_exclusao = int(input("Digite o código dx estudante que deseja excluir: "))
+                for cadastro_estudante in estudantes:
+                    if cadastro_estudante["codigo"] == codigo_exclusao:
+                        estudantes.remove(cadastro_estudante)
+                        print("Removeção efetuada com sucesso!")
+                    else:
+                        print("Estudante não localizadx.")       
             elif opcao2 == "0":
                 print("Você escolheu SAIR")
                 break
@@ -49,4 +75,4 @@ while True:
         print("Você escolheu SAIR.")
         break
     else:
-         print("Você escolheu uma opção inválida. Tente novamente.")
+         print("Você escolheu uma opção INVÁLIDA. Tente novamente.")

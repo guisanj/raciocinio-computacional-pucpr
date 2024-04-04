@@ -1,6 +1,4 @@
-estudantes = []
-
-while True: 
+def mostrar_menu_principal():
     print("*** Bem vindo ao sistema de gestão de dados acadêmicos! ***")
     print("Digite o número indicado para a opção desejada: ")
     print("1. ESTUDANTES")
@@ -9,61 +7,75 @@ while True:
     print("4. TURMAS")
     print("5. MATRÍCULAS")
     print("0. SAIR")
+    return input("Opção desejada: ")
 
-    opcao1 = input("Opção desejada: ")
+def mostrar_menu_secundario():
+    print("Escolha a ação desejada: ")
+    print("1. INCLUIR")
+    print("2. LISTAR")
+    print("3. ATUALIZAR")
+    print("4. EXCLUIR")
+    print("0. SAIR")
+    return input("Escolha a ação desejada: ")
 
+def cadastrar_estudante(estudantes):
+    codigo_estudante = int(input("Digite o código dx estudante: "))
+    nome_estudante = input("Digite o nome dx estudante: ")
+    cpf_estudante = input("Digite o CPF dx estudante: ")
+    dados_estudante = {"codigo": codigo_estudante, "nome": nome_estudante, "cpf": cpf_estudante}
+    estudantes.append(dados_estudante)
+    print(f"Estudante {nome_estudante} adicionadx com sucesso!")
+
+def listar_estudantes(estudantes):
+    if len(estudantes) == 0:
+        print("Não existem estudantes cadastrados no momento")
+    else:
+        print("***ESTUDANTES***")
+        for i, estudante in enumerate(estudantes, start = 1):
+            print(i, estudante)
+
+def atualizar_estudantes(estudantes):
+    codigo_atualizacao = int(input("Digite o código dx estudante que deseja atualizar: "))
+    for cadastro_estudante in estudantes:
+        if cadastro_estudante["codigo"] == codigo_atualizacao:
+            cadastro_estudante["codigo"] = int(input("Digite o novo código dx estudante: "))
+            cadastro_estudante["nome"] = input("Digite o nome corrigido dx estudante: ")
+            cadastro_estudante["cpf"] = input("Digite CPF correto dx estudante: ")  
+            print(f"Cadastro atualizado com sucesso: {cadastro_estudante}")
+        else:
+            print("Estudante não localizadx.")
+
+def excluir_estudante(estudantes):
+    codigo_exclusao = int(input("Digite o código dx estudante que deseja excluir: "))
+    for cadastro_estudante in estudantes:
+        if cadastro_estudante["codigo"] == codigo_exclusao:
+            estudantes.remove(cadastro_estudante)
+            print("Removeção efetuada com sucesso!")
+        else:
+            print("Estudante não localizadx.")   
+
+
+estudantes = []
+
+while True: 
+    opcao1 = mostrar_menu_principal()
     if opcao1 == "1":
         while True: 
             print(f"Você escolheu a opção: {opcao1}") 
-            print("Escolha a ação desejada: ")
-            print("1. INCLUIR")
-            print("2. LISTAR")
-            print("3. ATUALIZAR")
-            print("4. EXCLUIR")
-            print("0. SAIR")
-            opcao2 = input("Escolha a ação desejada: ")
+            opcao2 = mostrar_menu_secundario()
             print(f"Você escolheu a opção: {opcao2}")
             if opcao2 == "1":
-                codigo_estudante = int(input("Digite o código dx estudante: "))
-                nome_estudante = input("Digite o nome dx estudante: ")
-                cpf_estudante = input("Digite o CPF dx estudante: ")
-                dados_estudante = {
-                    "codigo": codigo_estudante,
-                    "nome": nome_estudante,
-                    "cpf": cpf_estudante
-                }
-                estudantes.append(dados_estudante)
-                print(f"Estudante {nome_estudante} adicionadx com sucesso!")
+                cadastrar_estudante(estudantes)
                 break
             elif opcao2 == "2":
-                if len(estudantes) == 0:
-                    print("Não existem estudantes cadastrados no momento")
-                    break
-                else:
-                    print("***ESTUDANTES***")
-                    for i, estudante in enumerate(estudantes, start = 1):
-                        print(i, estudante)
+                listar_estudantes(estudantes)
+                break
             elif opcao2 =="3":
-                codigo_atualizacao = int(input("Digite o código dx estudante que deseja atualizar: "))
-                for cadastro_estudante in estudantes:
-                    if cadastro_estudante["codigo"] == codigo_atualizacao:
-                        cadastro_estudante["codigo"] = int(input("Digite o novo código dx estudante: "))
-                        cadastro_estudante["nome"] = input("Digite o nome corrigido dx estudante: ")
-                        cadastro_estudante["cpf"] = input("Digite CPF correto dx estudante: ")
-                        codigo_atualizacao = cadastro_estudante["codigo"]
-                        print(f"Cadastro atualizado com sucesso: {cadastro_estudante}")
-                        break
-                    else:
-                        print("Estudante não localizadx.")
-                        break
+                atualizar_estudantes(estudantes)
+                break
             elif opcao2 == "4":
-                codigo_exclusao = int(input("Digite o código dx estudante que deseja excluir: "))
-                for cadastro_estudante in estudantes:
-                    if cadastro_estudante["codigo"] == codigo_exclusao:
-                        estudantes.remove(cadastro_estudante)
-                        print("Removeção efetuada com sucesso!")
-                    else:
-                        print("Estudante não localizadx.")       
+                excluir_estudante(estudantes)
+                break
             elif opcao2 == "0":
                 print("Você escolheu SAIR")
                 break

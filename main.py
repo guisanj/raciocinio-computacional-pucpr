@@ -69,7 +69,7 @@ def processar_menu_secundario(opcao1, opcao2):
                 if opcao2 == 2:
                     listar_grupo_escolhido(arquivo_json)
                 elif opcao2 == 4:
-                    excluir_estudante_professor(arquivo_json)
+                    excluir_registro(arquivo_json)
             elif opcao2 == 0:
                 print("Você escolheu VOLTAR ao menu principal.")
             break
@@ -125,25 +125,6 @@ def atualizar_estudantes_professor(arquivo_json):
             salvar_arquivo(lista_temp, arquivo_json)
             return
     print("Não foi localizado um registro com o código informado.")
-
-def excluir_estudante_professor(arquivo_json):
-    lista_temp = ler_arquivo(arquivo_json)
-    estudante_professor_para_remover = None
-    try:
-        codigo_exclusao = int(input("Digite o código do registro que deseja excluir: "))
-    except ValueError:
-        print("Código digitado incorretamente.")
-    for cadastro_estudante_professor in lista_temp:
-        if cadastro_estudante_professor["codigo"] == codigo_exclusao:
-            estudante_professor_para_remover = cadastro_estudante_professor
-            print(f"Removendo {cadastro_estudante_professor}...")
-            break
-    if estudante_professor_para_remover is not None:
-        lista_temp.remove(estudante_professor_para_remover)
-        salvar_arquivo(lista_temp, arquivo_json)
-        print("Remoção efetuada com sucesso!")
-    else:
-        print("Não há registros para o código informado.")
 
 def cadastrar_disciplina(arquivo_json):
     while True:
@@ -201,13 +182,13 @@ def cadastrar_turma(arquivo_json):
         else:
             print("Não há disciplina registrada com o código informado.")
             return
-    dados_disciplina = {
-        "codigo_turma": codigo_turma,
+    dados_turma = {
+        "codigo": codigo_turma,
         "codigo_professor": codigo_professor,
         "codigo_disciplina": codigo_disciplina
     }
     lista_temp = ler_arquivo(arquivo_json)
-    lista_temp.append(dados_disciplina)
+    lista_temp.append(dados_turma)
     print(f"Turma de código {codigo_turma} adicionada com sucesso!")
     salvar_arquivo(lista_temp, arquivo_json)
 
@@ -218,7 +199,7 @@ def atualizar_turma(arquivo_json):
     except ValueError:
         print("Código digitado incorretamente.")
     for cadastro_turma in lista_temp:
-        if cadastro_turma["codigo_turma"] == codigo_atualizacao:
+        if cadastro_turma["codigo"] == codigo_atualizacao:
             print(f"Atualizando a turma de código {cadastro_turma}")
             while True:
                 try:
@@ -242,7 +223,7 @@ def atualizar_turma(arquivo_json):
                 else:
                     print("Não há disciplina registrada com o código informado.")
                     return
-            cadastro_turma["codigo_turma"] = novo_codigo_turma
+            cadastro_turma["codigo"] = novo_codigo_turma
             cadastro_turma["codigo_professor"] = novo_codigo_professor
             cadastro_turma["codigo_disciplina"] = novo_codigo_disciplina
             print(f"Registro da turma atualizado com sucesso: {cadastro_turma}")
@@ -253,13 +234,13 @@ def atualizar_turma(arquivo_json):
 def cadastrar_matricula(arquivo_json):
     while True:
         try:
-            codigo_turma = int(input("Digite o código da turma: "))
             codigo_estudante = int(input("Digite o código do estudante: "))
+            codigo_turma = int(input("Digite o código da turma: "))
             break
         except ValueError:
             print("Código digitado incorretamente.")
     for cadastro_turma in ler_arquivo("turmas.json"):
-        if cadastro_turma["codigo_turma"] == codigo_turma:
+        if cadastro_turma["codigo"] == codigo_turma:
             print(f"Localizada turma com o código informado!")
             break
         else:
@@ -273,9 +254,9 @@ def cadastrar_matricula(arquivo_json):
             print("Não há estudante registrado ocom o código informado.")
             return
     dados_turma = {
-        "codigo_turma": codigo_turma,
-        "codigo_estudante": codigo_estudante
-    }
+        "codigo": codigo_estudante,
+        "codigo_turma": codigo_turma
+     }
     lista_temp = ler_arquivo(arquivo_json)
     lista_temp.append(dados_turma)
     print(f"Matrícula {dados_turma} adicionada com sucesso!")
@@ -294,7 +275,7 @@ def atualizar_matricula(arquivo_json):
                 try:
                     novo_codigo_turma = int(input("Digite a turma correta: "))
                     for turma in ler_arquivo("turmas.json"):
-                        if turma["codigo_turma"] == novo_codigo_turma:
+                        if turma["codigo"] == novo_codigo_turma:
                             print(f"Localizada turma: {turma}")
                             turma["codigo_turma"] == novo_codigo_turma
                             print(f"Matrícula atualizada com sucesso: {cadastro_matricula}")
@@ -321,6 +302,25 @@ def salvar_arquivo(lista_temp, arquivo_json):
         json.dump(lista_temp, f, ensure_ascii=False)
         f.close()
 
+def excluir_registro(arquivo_json):
+    lista_temp = ler_arquivo(arquivo_json)
+    registro_para_remover = None
+    try:
+        codigo_exclusao = int(input("Digite o código do registro que deseja excluir: "))
+    except ValueError:
+        print("Código digitado incorretamente.")
+    for registro in lista_temp:
+        if registro["codigo"] == codigo_exclusao:
+            registro_para_remover = registro
+            print(f"Removendo {registro}...")
+            break
+    if registro_para_remover is not None:
+        lista_temp.remove(registro_para_remover)
+        salvar_arquivo(lista_temp, arquivo_json)
+        print("Remoção efetuada com sucesso!")
+    else:
+        print("Não há registro para o código informado.")
+
 def ler_arquivo(arquivo_json):
     try:
         with open(arquivo_json, "r", encoding="utf-8") as f:
@@ -332,13 +332,11 @@ def ler_arquivo(arquivo_json):
 
 while True: 
     opcao1 = mostrar_menu_principal()
-    if opcao1 >= 1 and opcao1 <= 4:
+    if opcao1 >= 1 and opcao1 <= 5:
         while True:
             opcao2 = mostrar_menu_secundario(opcao1)
             processar_menu_secundario(opcao1, opcao2)
             break
-    elif opcao1 == 5:
-        print("FUNCIONALIDADE EM DESENVOLVIMENTO")
     elif opcao1 == 0:
         print("Você escolheu SAIR.")
         break
